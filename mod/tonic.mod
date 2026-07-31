@@ -1,48 +1,118 @@
-: tonic current with rectification
-: based on Pavlov et al (J Neuro 2009)
+TITLE Tonic GABA current with rectification
 
-NEURON{
-SUFFIX tonic
-NONSPECIFIC_CURRENT i
-RANGE i, v, a, b, g, e_gaba}
+COMMENT
+    Tonic GABA current with voltage-dependent rectification.
 
-PARAMETER{
-g = 0.001 (siemens/cm2)
-e_gaba = -80 (millivolt)
+    Based on Pavlov et al. (J Neurosci. 2009).
+
+    Original kinetic scheme:
+
+        o <-> c
+
+    with:
+
+        b = forward rate constant
+        a = backward rate constant
+
+    Conservation:
+
+        o + c = 1
+
+    The system is represented using a single independent
+    state variable o. The closed-state probability is:
+
+        c = 1 - o
+ENDCOMMENT
+
+
+NEURON {
+    SUFFIX tonic
+
+    NONSPECIFIC_CURRENT i
+
+    RANGE g
+    RANGE e_gaba
+    RANGE i
+    RANGE o
+    RANGE c
+    RANGE a
+    RANGE b
+    THREADSAFE
 }
 
-ASSIGNED{
-v (millivolt)
-i (milliampere)
-a (/ms)
-b (/ms)}
 
-STATE{o c}
-
-BREAKPOINT{
-SOLVE kin METHOD sparse
-i = g*o*(v-e_gaba)}
-
-INITIAL {SOLVE kin STEADYSTATE sparse}
-
-KINETIC kin{
-rates(v)
-~ o<->c (b, a)   : b is forward rate constant, a backward
-CONSERVE o+c=1}
-
-PROCEDURE rates(v(millivolt)) {
-LOCAL x, y
-UNITSOFF
-x = 0.1*(v+20)
-if (fabs(x)>1e-6){
-a = (50*x)/(1-exp(-x))
-} else{
-a=0.25*(v^2+(20*v)+200)
+UNITS {
+    (S) = (siemens)
+    (mV) = (millivolt)
+    (mA) = (milliamp)
 }
-y = -0.08*(v-10)
-if(fabs(x)>1e-6){
-b = (20*y)/(1-exp(-y))
-} else{
-b = -0.064*(v^2-(45*v)+37.5)
+
+
+PARAMETER {
+    g = 0.001 (S/cm2)
+    e_gaba = -80 (mV)
 }
-UNITSON}
+
+
+ASSIGNED {
+    v       (mV)
+    i       (mA/cm2)
+
+    a       (/ms)
+    b       (/ms)
+
+    c
+}
+
+
+STATE {
+    o
+}
+
+
+BREAKPOINT {
+    SOLVE states METHOD cnexp
+
+    c = 1 - o
+
+    i = g * o * (v - e_gaba)
+}
+
+
+DERIVATIVE states {
+    rates()
+
+    o' = a * (1 - o) - b * o
+}
+
+
+INITIAL {
+    rates()
+    o = a/(a+b)
+    c = 1-o
+}
+
+
+PROCEDURE rates() {
+    LOCAL x, y
+
+    UNITSOFF
+
+    x = 0.1 * (v + 20)
+
+    if (fabs(x) > 1e-6) {
+        a = (50 * x) / (1 - exp(-x))
+    } else {
+        a = 0.25 * (v^2 + 20 * v + 200)
+    }
+
+    y = -0.08 * (v - 10)
+
+    if (fabs(y) > 1e-6) {
+        b = (20 * y) / (1 - exp(-y))
+    } else {
+        b = -0.064 * (v^2 - 45 * v + 37.5)
+    }
+
+    UNITSON
+}

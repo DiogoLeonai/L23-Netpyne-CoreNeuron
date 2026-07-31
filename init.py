@@ -85,7 +85,12 @@ for metype in sim.net.cells:
 # Also load net_functions.hoc so HOC helpers are available at cell-build time.
 h.load_file('net_functions.hoc')
 
-_OU_REFS = []   # keeps HocObjects alive for entire simulation lifetime
+# Keep point-process objects alive for the full simulation.
+_OU_REFS = []
+
+# Distinct namespace for Gfluct2 Random123 streams.
+_OU_STREAM_TAG = 0x4F550000
+_UINT32_MASK = 0xFFFFFFFF
 
 
 def _neuron_distance_setup(hobj):
@@ -131,87 +136,107 @@ def _locate_sites(hobjs, site):
 
 
 def insert_ou_noise(sim_obj, cfg_obj, sing_cell_param):
-    """Insert Ornstein-Uhlenbeck background noise into each cell."""
-    # np.random.seed(12340000)
-    n_total      = 0
-    type_basal   = {}   # {cell_type: total basal Gfluct2}
-    type_apical  = {}   # {cell_type: total apical Gfluct2}
-    type_n_cells = {}   # {cell_type: cell count}
+    """Insert CoreNEURON 9.0.1-compatible OU conductance noise."""
+    n_total = 0
+    type_basal = {}
+    type_apical = {}
+    type_n_cells = {}
+
+    global_seed = int(cfg_obj.GLOBALSEED) & _UINT32_MASK
 
     for cell in sim_obj.net.cells:
-        cell_type = cell.tags.get('cellType', '')
-        gou       = sing_cell_param[cell_type]['GOU']
-        rseed = int(local_state.uniform()*SEED)
-        base_seed = rseed # * (cell.gid + 1)
-        # base_seed = 7313766 * int(cfg_obj.GLOBALSEED/1234) * (cell.gid + 1) # compare with LFPy
-        idx       = 0
-        n_basal   = 0
-        n_apical  = 0
+        cell_type = cell.tags.get("cellType", "")
+        gou = sing_cell_param[cell_type]["GOU"]
+        gid_seed = int(cell.gid) & _UINT32_MASK
 
-        def _place_ou(hobj, x_pos, relpos_for_g, seed_offset):
+        idx = 0
+        n_basal = 0
+        n_apical = 0
+
+        def _place_ou(hobj, x_pos, relpos_for_g, site_id):
             g_val = gou * np.exp(relpos_for_g)
             ou = h.Gfluct2(x_pos, sec=hobj)
-            ou.E_e   = 0.0;    ou.E_i   = -80.0
-            ou.g_e0  = g_val;  ou.g_i0  = 0.0
-            ou.std_e = g_val;  ou.std_i = 0.0
-            ou.tau_e = 65.0;   ou.tau_i = 20.0
-            rng = h.Random(base_seed * 10 + seed_offset)
-            rng.normal(0, 1)
-            ou.noiseFromRandom(rng)
-            _OU_REFS.append((ou, rng))
 
-        # ----------------------------------------------------------------
-        # Basal: locateSites("dend", 0.5 * getLongestBranch)
-        # FIX: relpos_for_g = 0.5 (CONSTANT), matching HOC line 50.
-        #      Do NOT pass x (section-local position) — that was a bug.
-        # ----------------------------------------------------------------
-        dend_secs = [s for s in cell.secs if s.startswith('dend')]
+            ou.E_e = 0.0
+            ou.E_i = -80.0
+            ou.g_e0 = g_val
+            ou.g_i0 = 0.0
+            ou.std_e = g_val
+            ou.std_i = 0.0
+            ou.tau_e = 65.0
+            ou.tau_i = 20.0
+
+            # In NEURON 9.0.1, set RANDOM stream properties through the
+            # NMODLRandom wrapper instead of random_setids() in the MOD file.
+            stream_id3 = (_OU_STREAM_TAG + int(site_id)) & _UINT32_MASK
+            ou.rng.set_ids(global_seed, gid_seed, stream_id3)
+            ou.rng.set_seq(0)
+
+            _OU_REFS.append(ou)
+
+        dend_secs = [name for name in cell.secs if name.startswith("dend")]
         if dend_secs:
-            dend_hobjs = [cell.secs[s]['hObj'] for s in dend_secs]
+            dend_hobjs = [cell.secs[name]["hObj"] for name in dend_secs]
             _neuron_distance_setup(dend_hobjs[0])
             max_L = _get_longest_branch(dend_hobjs)
-            ii = 0
-            for hobj, x in _locate_sites(dend_hobjs, 0.5 * max_L):
-                if cell.gid >= 0: # compare with LFPy
-                    _place_ou(hobj, x, 0.5, ii+5)   # relpos_for_g = 0.5 FIXED
+
+            for basal_index, (hobj, x) in enumerate(
+                _locate_sites(dend_hobjs, 0.5 * max_L)
+            ):
+                if cell.gid >= 0:
+                    _place_ou(
+                        hobj,
+                        x,
+                        relpos_for_g=0.5,
+                        site_id=5 + basal_index,
+                    )
                 idx += 1
                 n_basal += 1
-                ii += 1
 
-        # ----------------------------------------------------------------
-        # Apical (PYR only): 5 proportional distances, widest-diam section
-        # relpos_for_g = relpos (varies 0.1→0.9) — correct, matches HOC
-        # ----------------------------------------------------------------
-        if 'PYR' in cell_type:
-            apic_secs = [s for s in cell.secs if s.startswith('apic')]
+        if "PYR" in cell_type:
+            apic_secs = [name for name in cell.secs if name.startswith("apic")]
             if apic_secs:
-                apic_hobjs = [cell.secs[s]['hObj'] for s in apic_secs]
+                apic_hobjs = [cell.secs[name]["hObj"] for name in apic_secs]
                 _neuron_distance_setup(apic_hobjs[0])
                 max_L_apic = _get_longest_branch(apic_hobjs)
-                for ii, relpos in enumerate([0.1, 0.3, 0.5, 0.7, 0.9]):
+
+                for apical_index, relpos in enumerate((0.1, 0.3, 0.5, 0.7, 0.9)):
                     hits = _locate_sites(apic_hobjs, relpos * max_L_apic)
                     if not hits:
                         hits = [(apic_hobjs[0], min(relpos, 0.9))]
-                    best_hobj, best_x = max(hits, key=lambda t: t[0](t[1]).diam)
-                    if cell.gid >= 0: # compare with LFPy
-                        _place_ou(best_hobj, best_x, relpos, ii)
+
+                    best_hobj, best_x = max(
+                        hits,
+                        key=lambda item: item[0](item[1]).diam,
+                    )
+                    if cell.gid >= 0:
+                        _place_ou(
+                            best_hobj,
+                            best_x,
+                            relpos_for_g=relpos,
+                            site_id=apical_index,
+                        )
                     idx += 1
                     n_apical += 1
 
         n_total += idx
-        type_basal[cell_type]   = type_basal.get(cell_type, 0)   + n_basal
-        type_apical[cell_type]  = type_apical.get(cell_type, 0)  + n_apical
+        type_basal[cell_type] = type_basal.get(cell_type, 0) + n_basal
+        type_apical[cell_type] = type_apical.get(cell_type, 0) + n_apical
         type_n_cells[cell_type] = type_n_cells.get(cell_type, 0) + 1
 
-    # print(f'[init] Inserted OU noise into {len(sim_obj.net.cells)} cells '
-    #       f'({n_total} Gfluct2 total):')
-    for _ct in sorted(type_basal):
-        _nc = type_n_cells[_ct]
-        _nb = type_basal[_ct]   // _nc
-        _na = type_apical.get(_ct, 0) // _nc
-        _g_basal = sing_cell_param[_ct]['GOU'] * np.exp(0.5) * 1e6
-        # print(f'  [OU] {_ct}: {_nb} basal/cell, {_na} apical/cell  '
-        #       f'(g_e0_basal={_g_basal:.1f} pS = GOU*exp(0.5))')
+    for cell_type in sorted(type_basal):
+        n_cells = type_n_cells[cell_type]
+        basal_per_cell = type_basal[cell_type] // n_cells
+        apical_per_cell = type_apical.get(cell_type, 0) // n_cells
+        g_basal_ps = sing_cell_param[cell_type]["GOU"] * np.exp(0.5) * 1e6
+        # Optional diagnostics:
+        # print(
+        #     f"[OU] {cell_type}: {basal_per_cell} basal/cell, "
+        #     f"{apical_per_cell} apical/cell, "
+        #     f"g_e0_basal={g_basal_ps:.1f} pS"
+        # )
+
+    return n_total
 
 
 # ---------------------------------------------------------------------------
@@ -260,11 +285,11 @@ def insert_tonic_gaba(sim_obj, cfg_obj, sing_cell_param):
 # 5.  Build and run simulation
 # ---------------------------------------------------------------------------
 
-# print('[init] Inserting background noise (Gfluct2) ...')
+#print('[init] Inserting background noise (Gfluct2) ...')
 insert_ou_noise(sim, cfg, SING_CELL_PARAM)
 
 # print('[init] Inserting tonic GABA inhibition ...')
-#insert_tonic_gaba(sim, cfg, SING_CELL_PARAM)
+insert_tonic_gaba(sim, cfg, SING_CELL_PARAM)
 
 sim.cfg.distributeSynsUniformly = False
 

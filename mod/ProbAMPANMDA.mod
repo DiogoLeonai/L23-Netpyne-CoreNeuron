@@ -1,213 +1,151 @@
-TITLE AMPA and NMDA receptor with presynaptic short-term plasticity 
-
+TITLE AMPA and NMDA receptor with probabilistic presynaptic short-term plasticity
 
 COMMENT
-AMPA and NMDA receptor conductance using a dual-exponential profile
-presynaptic short-term plasticity based on Fuhrmann et al. 2002
-Implemented by Srikanth Ramaswamy, Blue Brain Project, July 2009
-Etay: changed weight to be equal for NMDA and AMPA, gmax accessible in Neuron
-Tuomo: allowed different weights for AMPA and NMDA
+CoreNEURON 9.0.1 GPU-compatible port of ProbAMPANMDA.
 
+Important implementation details:
+  * native NMODL RANDOM stream; no POINTER or VERBATIM RNG plumbing
+  * no nested INITIAL block inside NET_RECEIVE
+  * per-NetCon plasticity state is initialized lazily on the first event
+  * Pv_tmp and Pr are event-local temporaries, not persistent NetCon weights
+  * random_negexp(rng) preserves the effective distribution used by the
+    original mechanism (Random.negexp(1) / exprand(1))
+  * mg and mggate are per-instance values
+
+The original NONSPECIFIC_CURRENT declaration is retained exactly. Because
+'i' is also the sum of i_AMPA and i_NMDA, this preserves the original model's
+current accounting, including its apparent double counting of component
+currents.
 ENDCOMMENT
 
-
 NEURON {
+    POINT_PROCESS ProbAMPANMDA
 
-        POINT_PROCESS ProbAMPANMDA 
-        RANGE tau_r_AMPA, tau_d_AMPA, tau_r_NMDA, tau_d_NMDA
-        RANGE Use, u, Dep, Fac, u0, weight_factor_NMDA
-        RANGE i, i_AMPA, i_NMDA, g_AMPA, g_NMDA, e, gmax
-        NONSPECIFIC_CURRENT i, i_AMPA,i_NMDA
-	POINTER rng
+    RANGE tau_r_AMPA, tau_d_AMPA, tau_r_NMDA, tau_d_NMDA
+    RANGE Use, Dep, Fac, u0, weight_factor_NMDA
+    RANGE i, i_AMPA, i_NMDA, g_AMPA, g_NMDA
+    RANGE e, gmax, mg, mggate
+
+    NONSPECIFIC_CURRENT i, i_AMPA, i_NMDA
+
+    RANDOM rng
+    THREADSAFE
 }
 
 PARAMETER {
+    tau_r_AMPA = 0.2  (ms)
+    tau_d_AMPA = 1.7  (ms)
+    tau_r_NMDA = 0.29 (ms)
+    tau_d_NMDA = 43   (ms)
 
-        tau_r_AMPA = 0.2   (ms)  : dual-exponential conductance profile
-        tau_d_AMPA = 1.7    (ms)  : IMPORTANT: tau_r < tau_d
-	tau_r_NMDA = 0.29   (ms) : dual-exponential conductance profile
-        tau_d_NMDA = 43     (ms) : IMPORTANT: tau_r < tau_d
-        Use = 1.0   (1)   : Utilization of synaptic efficacy (just initial values! Use, Dep and Fac are overwritten by BlueBuilder assigned values) 
-        Dep = 100   (ms)  : relaxation time constant from depression
-        Fac = 10   (ms)  :  relaxation time constant from facilitation
-        e = 0     (mV)  : AMPA and NMDA reversal potential
-	mg = 1   (mM)  : initial concentration of mg2+
-        mggate
-    	gmax = .001 (uS) : weight conversion factor (from nS to uS)
-    	u0 = 0 :initial value of u, which is the running value of Use
-        weight_factor_NMDA = 1
+    Use = 1.0 (1)
+    Dep = 100 (ms)
+    Fac = 10  (ms)
+    u0  = 0   (1)
+
+    e  = 0 (mV)
+    mg = 1 (mM)
+
+    gmax = 0.001 (uS)
+    weight_factor_NMDA = 1 (1)
 }
 
-COMMENT
-The Verbatim block is needed to generate random nos. from a uniform distribution between 0 and 1 
-for comparison with Pr to decide whether to activate the synapse or not
-ENDCOMMENT
-   
-VERBATIM
-
-#include<stdlib.h>
-#include<stdio.h>
-#include<math.h>
-
-double nrn_random_pick(void* r);
-void* nrn_random_arg(int argpos);
-
-ENDVERBATIM
-  
-
 ASSIGNED {
+    v (mV)
 
-        v (mV)
-        i (nA)
-	i_AMPA (nA)
-	i_NMDA (nA)
-        g_AMPA (uS)
-	g_NMDA (uS)
-        factor_AMPA
-	factor_NMDA
-	rng
+    i      (nA)
+    i_AMPA (nA)
+    i_NMDA (nA)
+
+    g_AMPA (uS)
+    g_NMDA (uS)
+
+    mggate (1)
+    factor_AMPA (1)
+    factor_NMDA (1)
 }
 
 STATE {
-
-        A_AMPA       : AMPA state variable to construct the dual-exponential profile - decays with conductance tau_r_AMPA
-        B_AMPA       : AMPA state variable to construct the dual-exponential profile - decays with conductance tau_d_AMPA
-	A_NMDA       : NMDA state variable to construct the dual-exponential profile - decays with conductance tau_r_NMDA
-        B_NMDA       : NMDA state variable to construct the dual-exponential profile - decays with conductance tau_d_NMDA
+    A_AMPA
+    B_AMPA
+    A_NMDA
+    B_NMDA
 }
 
-INITIAL{
+INITIAL {
+    LOCAL tp_AMPA, tp_NMDA
 
-        LOCAL tp_AMPA, tp_NMDA
-        
-	A_AMPA = 0
-        B_AMPA = 0
-	
-	A_NMDA = 0
-	B_NMDA = 0
-        
-	tp_AMPA = (tau_r_AMPA*tau_d_AMPA)/(tau_d_AMPA-tau_r_AMPA)*log(tau_d_AMPA/tau_r_AMPA) :time to peak of the conductance
-	tp_NMDA = (tau_r_NMDA*tau_d_NMDA)/(tau_d_NMDA-tau_r_NMDA)*log(tau_d_NMDA/tau_r_NMDA) :time to peak of the conductance
-        
-	factor_AMPA = -exp(-tp_AMPA/tau_r_AMPA)+exp(-tp_AMPA/tau_d_AMPA) :AMPA Normalization factor - so that when t = tp_AMPA, gsyn = gpeak
-        factor_AMPA = 1/factor_AMPA
-	
-	factor_NMDA = -exp(-tp_NMDA/tau_r_NMDA)+exp(-tp_NMDA/tau_d_NMDA) :NMDA Normalization factor - so that when t = tp_NMDA, gsyn = gpeak
-        factor_NMDA = 1/factor_NMDA
-   
+    A_AMPA = 0
+    B_AMPA = 0
+    A_NMDA = 0
+    B_NMDA = 0
+
+    tp_AMPA = (tau_r_AMPA * tau_d_AMPA) / (tau_d_AMPA - tau_r_AMPA) * log(tau_d_AMPA / tau_r_AMPA)
+    factor_AMPA = 1 / (-exp(-tp_AMPA / tau_r_AMPA) + exp(-tp_AMPA / tau_d_AMPA))
+
+    tp_NMDA = (tau_r_NMDA * tau_d_NMDA) / (tau_d_NMDA - tau_r_NMDA) * log(tau_d_NMDA / tau_r_NMDA)
+    factor_NMDA = 1 / (-exp(-tp_NMDA / tau_r_NMDA) + exp(-tp_NMDA / tau_d_NMDA))
+
+    : Keep configured Random123 IDs, but restart the sequence at finitialize().
+    random_setseq(rng, 0)
 }
 
 BREAKPOINT {
+    SOLVE state METHOD cnexp
 
-        SOLVE state METHOD cnexp
-	mggate = 1 / (1 + exp(0.062 (/mV) * -(v)) * (mg / 3.57 (mM))) :mggate kinetics - Jahr & Stevens 1990
-        g_AMPA = gmax*(B_AMPA-A_AMPA) :compute time varying conductance as the difference of state variables B_AMPA and A_AMPA
-	g_NMDA = gmax*(B_NMDA-A_NMDA) * mggate :compute time varying conductance as the difference of state variables B_NMDA and A_NMDA and mggate kinetics
-        i_AMPA = g_AMPA*(v-e) :compute the AMPA driving force based on the time varying conductance, membrane potential, and AMPA reversal
-	i_NMDA = g_NMDA*(v-e) :compute the NMDA driving force based on the time varying conductance, membrane potential, and NMDA reversal
-	i = i_AMPA + i_NMDA
+    mggate = 1 / (1 + exp(-0.062 (/mV) * v) * (mg / 3.57 (mM)))
+
+    g_AMPA = gmax * (B_AMPA - A_AMPA)
+    g_NMDA = gmax * (B_NMDA - A_NMDA) * mggate
+
+    i_AMPA = g_AMPA * (v - e)
+    i_NMDA = g_NMDA * (v - e)
+    i = i_AMPA + i_NMDA
 }
 
-DERIVATIVE state{
-
-        A_AMPA' = -A_AMPA/tau_r_AMPA
-        B_AMPA' = -B_AMPA/tau_d_AMPA
-	A_NMDA' = -A_NMDA/tau_r_NMDA
-        B_NMDA' = -B_NMDA/tau_d_NMDA
+DERIVATIVE state {
+    A_AMPA' = -A_AMPA / tau_r_AMPA
+    B_AMPA' = -B_AMPA / tau_d_AMPA
+    A_NMDA' = -A_NMDA / tau_r_NMDA
+    B_NMDA' = -B_NMDA / tau_d_NMDA
 }
 
+NET_RECEIVE (weight, Pv, u, tsyn (ms), initialized) {
+    LOCAL Pv_tmp, Pr
 
-NET_RECEIVE (weight, Pv, Pv_tmp, Pr, u, tsyn (ms)){
-	
-	:weight_AMPA = weight
-	:weight_NMDA = weight*weight_factor_NMDA
-	:printf("NMDA weight = %g\n", weight_NMDA)
-
-        INITIAL{
-                Pv=1
-                u=u0
-                tsyn=t
-            }
-
-        : calc u at event-
-        if (Fac > 0) {
-                u = u*exp(-(t - tsyn)/Fac) :update facilitation variable if Fac>0 Eq. 2 in Fuhrmann et al.
-           } else {
-                  u = Use  
-           } 
-           if(Fac > 0){
-                  u = u + Use*(1-u) :update facilitation variable if Fac>0 Eq. 2 in Fuhrmann et al.
-           }    
-
-        
-            Pv_tmp  = 1 - (1-Pv) * exp(-(t-tsyn)/Dep) :Probability Pv for a vesicle to be available for release, analogous to the pool of synaptic
-                                                      :resources available for release in the deterministic model. Eq. 3 in Fuhrmann et al.
-            Pr  = u * Pv_tmp                          :Pr is calculated as Pv * u (running value of Use)
-            Pv_tmp  = Pv_tmp - u * Pv_tmp             :update Pv as per Eq. 3 in Fuhrmann et al.
-            :printf("Pv = %g\n", Pv)
-            :printf("Pr = %g\n", Pr)
-                
-		   if (erand() < Pr){
-		    tsyn = t
-	            Pv = Pv_tmp
-                    A_AMPA = A_AMPA + weight*factor_AMPA
-                    B_AMPA = B_AMPA + weight*factor_AMPA
-		    A_NMDA = A_NMDA + weight*weight_factor_NMDA*factor_NMDA
-                    B_NMDA = B_NMDA + weight*weight_factor_NMDA*factor_NMDA
-
-                }
-}
-
-PROCEDURE setRNG() {
-VERBATIM
-    {
-        /**
-         * This function takes a NEURON Random object declared in hoc and makes it usable by this mod file.
-         * Note that this method is taken from Brett paper as used by netstim.hoc and netstim.mod
-         * which points out that the Random must be in negexp(1) mode
-         */
-        void** pv = (void**)(&_p_rng);
-        if( ifarg(1)) {
-            *pv = nrn_random_arg(1);
-        } else {
-            *pv = (void*)0;
-        }
+    : With no NET_RECEIVE INITIAL block, NEURON resets all weight slots after
+    : weight[0] to zero at finitialize().  Initialize this NetCon's STP state
+    : when its first event is delivered.  The original nested INITIAL block
+    : ran at t=0, hence tsyn starts at 0 here as well.
+    if (initialized == 0) {
+        Pv = 1
+        u = u0
+        tsyn = 0
+        initialized = 1
     }
-ENDVERBATIM
+
+    : Facilitation (Fuhrmann et al., Eq. 2).
+    if (Fac > 0) {
+        u = u * exp(-(t - tsyn) / Fac)
+        u = u + Use * (1 - u)
+    } else {
+        u = Use
+    }
+
+    : Vesicle availability and release probability (Eq. 3).
+    Pv_tmp = 1 - (1 - Pv) * exp(-(t - tsyn) / Dep)
+    Pr = u * Pv_tmp
+    Pv_tmp = Pv_tmp - u * Pv_tmp
+
+    : Preserve the original mechanism's negative-exponential random draw.
+    if (random_negexp(rng) < Pr) {
+        tsyn = t
+        Pv = Pv_tmp
+
+        A_AMPA = A_AMPA + weight * factor_AMPA
+        B_AMPA = B_AMPA + weight * factor_AMPA
+
+        A_NMDA = A_NMDA + weight * weight_factor_NMDA * factor_NMDA
+        B_NMDA = B_NMDA + weight * weight_factor_NMDA * factor_NMDA
+    }
 }
-
-FUNCTION erand() {
-VERBATIM
-	    //FILE *fi;
-        double value;
-        if (_p_rng) {
-                /*
-                :Supports separate independent but reproducible streams for
-                : each instance. However, the corresponding hoc Random
-                : distribution MUST be set to Random.negexp(1)
-                */
-                value = nrn_random_pick(_p_rng);
-		        //fi = fopen("RandomStreamMCellRan4.txt", "w");
-                //fprintf(fi,"random stream for this simulation = %lf\n",value);
-                //printf("random stream for this simulation = %lf\n",value);
-                return value;
-        }else{
-ENDVERBATIM
-                : the old standby. Cannot use if reproducible parallel sim
-                : independent of nhost or which host this instance is on
-                : is desired, since each instance on this cpu draws from
-                : the same stream
-                erand = exprand(1)
-VERBATIM
-        }
-ENDVERBATIM
-        :erand = value :This line must have been a mistake in Hay et al.'s code, it would basically set the return value to a non-initialized double value.
-                       :The reason it sometimes works could be that the memory allocated for the non-initialized happened to contain the random value
-                       :previously generated (or if _p_rng is always a null pointer). However, here we commented this line out.
-}
-
-
-
-
-
-

@@ -15,7 +15,7 @@ import numpy as np
 def custom():
     params = specs.ODict()
     
-    params[('seeds', 'stim')] =  [1234]    
+    params[('seeds', 'stim')] =  [12346]    
     # params[('gExc')] = [1.0]
 
     b = Batch(params=params, netParamsFile='netParams.py', cfgFile='cfg.py')
@@ -33,7 +33,7 @@ def setRunCfg(b, type='mpi_bulletin'):
 
     elif type=='mpi_direct':
         b.runCfg = {'type': 'mpi_direct',
-            'cores': 20,
+            'cores': 1,
             'script': 'init.py',
             'mpiCommand': 'mpiexec', # --use-hwthread-cpus
             'skip': True}
@@ -72,7 +72,7 @@ def setRunCfg(b, type='mpi_bulletin'):
 if __name__ == '__main__': 
     b = custom() #
 
-    b.batchLabel = 'v1_batch3_new'  
+    b.batchLabel = 'v1_gpu_2s_100Neurons'  
     b.saveFolder = '../data/'+b.batchLabel
     b.method = 'grid'
     setRunCfg(b, 'mpi_direct')  #  setRunCfg(b, 'hpc_slurm_Expanse')

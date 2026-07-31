@@ -6,14 +6,15 @@ import pandas as pd
 from netpyne import specs
 
 cfg = specs.SimConfig()
-
+cfg.coreneuron = True
+cfg.gpu = True
 # ---------------------------------------------------------------------------
 # Identity / I/O
 # ---------------------------------------------------------------------------
 cfg.simLabel = 'v1_batch3_new'       #   + str(cfg.cynradNumber)
 cfg.saveFolder = '../data/'+cfg.simLabel
 cfg.savePickle  = True
-cfg.saveJson    = False   # disabled for speed — spikes saved as .npy per seed
+cfg.saveJson    = True   # disabled for speed — spikes saved as .npy per seed
 
 cfg.saveDataInclude = ['simData' , 'simConfig', 'netParams', 'netParams']
 cfg.backupCfgFile = None 		##  
@@ -44,8 +45,8 @@ cfg.dt       = 0.025     # ms  (40 kHz)
 # ---------------------------------------------------------------------------
 # Random seeds
 # ---------------------------------------------------------------------------
-cfg.seeds = {'conn':  1234, 'stim':  1234, 'loc':   1234, 'cell':  1234}
-cfg.GLOBALSEED = 1234
+cfg.seeds = {'conn':  54321, 'stim':  54321, 'loc':   54321, 'cell':  54321}
+cfg.GLOBALSEED = 54321
 cfg.DRUG = False
 
 # ---------------------------------------------------------------------------
@@ -78,7 +79,11 @@ cell_indices_to_plot = [0, 1,
 #                         N_HL23PYR + N_HL23SST + j, 
 #                         N_HL23PYR + N_HL23SST + N_HL23PV + j]
     
-# cell_indices_to_plot = range(0,N_cells)
+# cell_indices_to_plot = [i for i in range(1000)]
+cell_indices_to_plot = [0, 1, 
+                        N_HL23PYR, N_HL23PYR + 1, 
+                        N_HL23PYR + N_HL23SST, N_HL23PYR + N_HL23SST + 1, 
+                        N_HL23PYR + N_HL23SST + N_HL23PV, N_HL23PYR + N_HL23SST + N_HL23PV + 1]
 
 cfg.recordCells  = cell_indices_to_plot
 cfg.recordTraces = {'V_soma': {'sec': 'soma_0', 'loc': 0.5, 'var': 'v'}}
@@ -94,6 +99,23 @@ cfg.cellNumber0['HL23PYR'] = 0
 cfg.cellNumber0['HL23SST'] = N_HL23PYR
 cfg.cellNumber0['HL23PV'] = N_HL23PYR + N_HL23SST
 cfg.cellNumber0['HL23VIP'] = N_HL23PYR + N_HL23SST + N_HL23PV
+
+
+cfg.cellTypeByIndex = {}
+
+for i in range(N_HL23PYR):
+    cfg.cellTypeByIndex[i] = 'HL23PYR'
+
+for i in range(N_HL23PYR, N_HL23PYR + N_HL23SST):
+    cfg.cellTypeByIndex[i] = 'HL23SST'
+
+for i in range(N_HL23PYR + N_HL23SST,
+               N_HL23PYR + N_HL23SST + N_HL23PV):
+    cfg.cellTypeByIndex[i] = 'HL23PV'
+
+for i in range(N_HL23PYR + N_HL23SST + N_HL23PV, N_cells):
+    cfg.cellTypeByIndex[i] = 'HL23VIP'
+
 
 # LFPy conn distribution comparation
 cfg.gExc = 0.945 # The factor ~0.945 compensates for the main conn difference if cfg.LOAD_MATRIX_LFPy = False
@@ -118,12 +140,12 @@ cfg.analysis['plot2Dnet']   = {'include':  cfg.allpops, 'saveFig': True, 'showCo
 cfg.analysis['plotTraces'] = {'include': cfg.recordCells, 'oneFigPer': 'trace', 'axis': False, 'overlay': False, 'timeRange': [0,cfg.duration], 'saveFig': True, 'subtitles': None, 'legend': None, 'showFig': False, 'figSize':(18,18)}
 # , 'ylim': [-85,40]
 # cfg.analysis['plotTraces'] = {'oneFigPer': 'trace', 'overlay': True, 'timeRange': [0,cfg.duration], 'saveFig': True, 'showFig': False, 'figSize':(12,4)} # , 'ylim': [-90,30] Plot recorded traces for this list of cells
-cfg.analysis['plotShape'] = {'includePre':  cfg.allpops,'includePost': cfg.allpops, #  [0, 200, 600, 800, 850, 920]
-                             'includeAxon': False, 'showSyns': False, 'showElectrodes': False,
-                                'cvar': 'voltage', 'dist': 0.65, 'elev': 95, 'azim':-90, 
-                                'axisLabels':True, 'synStyle':'o', 
-                                'clim': [-70, -40.], 'showFig': False, 'synSize': 2,                             
-                                'saveFig': True, 'figSize':(24,24)}
+# cfg.analysis['plotShape'] = {'includePre':  cfg.allpops,'includePost': cfg.allpops, #  [0, 200, 600, 800, 850, 920]
+#                              'includeAxon': False, 'showSyns': False, 'showElectrodes': False,
+#                                 'cvar': 'voltage', 'dist': 0.65, 'elev': 95, 'azim':-90, 
+#                                 'axisLabels':True, 'synStyle':'o', 
+#                                 'clim': [-70, -40.], 'showFig': False, 'synSize': 2,                             
+#                                 'saveFig': True, 'figSize':(24,24)}
 
 cfg.analysis['plotConn'] = {'includePre': cfg.allpops, 'includePost': cfg.allpops, 'feature': 'numConns', 'groupBy': 'pop', 'figSize': (24,24), 
                             'saveFig': True, 'orderBy': 'gid', 'graphType': 'matrix', 'saveData':'v1_batch1_matrix_numConn.json', 'fontSize': 18}
