@@ -1,0 +1,136 @@
+CaDynamics.cpp: ../mod/CaDynamics.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "CaDynamics.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./CaDynamics.o: CaDynamics.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+Ca_HVA.cpp: ../mod/Ca_HVA.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Ca_HVA.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./Ca_HVA.o: Ca_HVA.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+Ca_LVA.cpp: ../mod/Ca_LVA.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Ca_LVA.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./Ca_LVA.o: Ca_LVA.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+epsp.cpp: ../mod/epsp.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "epsp.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./epsp.o: epsp.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+Gfluct.cpp: ../mod/Gfluct.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Gfluct.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./Gfluct.o: Gfluct.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+Ih.cpp: ../mod/Ih.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Ih.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./Ih.o: Ih.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+Im.cpp: ../mod/Im.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Im.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./Im.o: Im.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+K_P.cpp: ../mod/K_P.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "K_P.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./K_P.o: K_P.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+K_T.cpp: ../mod/K_T.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "K_T.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./K_T.o: K_T.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+Kv3_1.cpp: ../mod/Kv3_1.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Kv3_1.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./Kv3_1.o: Kv3_1.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+Nap.cpp: ../mod/Nap.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Nap.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./Nap.o: Nap.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+NaTg.cpp: ../mod/NaTg.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "NaTg.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./NaTg.o: NaTg.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+NMDA.cpp: ../mod/NMDA.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "NMDA.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./NMDA.o: NMDA.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+ProbAMPANMDA.cpp: ../mod/ProbAMPANMDA.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ProbAMPANMDA.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./ProbAMPANMDA.o: ProbAMPANMDA.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+ProbUDFsyn.cpp: ../mod/ProbUDFsyn.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ProbUDFsyn.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./ProbUDFsyn.o: ProbUDFsyn.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+SK.cpp: ../mod/SK.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "SK.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./SK.o: SK.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+
+tonic.cpp: ../mod/tonic.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "tonic.mod"  -o "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64" )
+
+./tonic.o: tonic.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<\\n"
+	$(CXXCOMPILE) -I"../mod" $(INCLUDES) -fPIC -c "/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim/x86_64/$<" -o $@
+

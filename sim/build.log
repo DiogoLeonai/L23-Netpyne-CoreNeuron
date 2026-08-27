@@ -1,0 +1,519 @@
+/home/diogo/Dropbox/Diogo/H01_Network_model/cod/GPU_test/Human_L23_NetPyNE-main/sim
+cfiles =
+Mod files: "mod/CaDynamics.mod" "mod/Ca_HVA.mod" "mod/Ca_LVA.mod" "mod/epsp.mod" "mod/Gfluct.mod" "mod/Ih.mod" "mod/Im.mod" "mod/K_P.mod" "mod/K_T.mod" "mod/Kv3_1.mod" "mod/Nap.mod" "mod/NaTg.mod" "mod/NMDA.mod" "mod/ProbAMPANMDA.mod" "mod/ProbUDFsyn.mod" "mod/SK.mod" "mod/tonic.mod"
+
+Creating 'x86_64' directory for .o files.
+
+MODOBJS= ./CaDynamics.o ./Ca_HVA.o ./Ca_LVA.o ./epsp.o ./Gfluct.o ./Ih.o ./Im.o ./K_P.o ./K_T.o ./Kv3_1.o ./Nap.o ./NaTg.o ./NMDA.o ./ProbAMPANMDA.o ./ProbUDFsyn.o ./SK.o ./tonic.o
+[INFO] Running: make -j4 -f /home/diogo/miniforge3/envs/core_neuron/share/coreneuron/nrnivmodl_core_makefile ROOT=/home/diogo/miniforge3/envs/core_neuron MODS_PATH=x86_64/corenrn/mod2c BUILD_TYPE=SHARED NRN_PRCELLSTATE=0
+Default NMODL flags: 
+diff: x86_64/corenrn/mod2c/_mod_func.cpp: Arquivo ou diretório inexistente
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/CaDynamics.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/Ca_LVA.mod
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/Ca_HVA.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/Gfluct.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand in VERBATIM block to grand_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand at 210.9-13 to grand_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand in VERBATIM block to grand_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand at 210.9-13 to grand_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand in VERBATIM block to grand_in_2
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand at 210.9-13 to grand_in_2
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand in VERBATIM block to grand_in_3
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand at 210.9-13 to grand_in_3
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand in VERBATIM block to ret_grand
+[NMODL] [warning] :: RenameVisitor :: Renaming variable grand at 210.9-13 to ret_grand
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/Ih.mod
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/Im.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/K_P.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/K_T.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/NMDA.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/Kv3_1.mod
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 100.16-21 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight_NMDA at 100.2-12 to (*weight_NMDA)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight_NMDA at 104.20-30 to (*weight_NMDA)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight_NMDA at 105.23-33 to (*weight_NMDA)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 98.14-19 to *weight
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight_NMDA at 98.22-32 to *weight_NMDA
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/NaTg.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/Nap.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/ProbAMPANMDA.mod
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/SK.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [warning] :: SYMTAB :: ca [Argument] in rates shadows <ion> definition in NMODL_GLOBAL
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [warning] :: SYMTAB :: ca [Argument] in rates shadows <ion> definition in NMODL_GLOBAL
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [warning] :: SYMTAB :: ca [Argument] in rates shadows <ion> definition in NMODL_GLOBAL
+[NMODL] [info] :: Parsing Units
+[NMODL] [warning] :: SYMTAB :: u [Argument] in NetReceiveBlock shadows <range> definition in NMODL_GLOBAL
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [warning] :: SYMTAB :: u [Argument] in NetReceiveBlock shadows <range> definition in NMODL_GLOBAL
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [warning] :: SYMTAB :: u [Argument] in NetReceiveBlock shadows <range> definition in NMODL_GLOBAL
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [warning] :: RenameVisitor :: Renaming variable ca at 47.12-13 to ca_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable ca at 50.29-30 to ca_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable ca at 47.12-13 to ca_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable ca at 50.29-30 to ca_in_1
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [warning] :: Can not inline function call to erand
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/ProbUDFsyn.mod
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [warning] :: SYMTAB :: u [Argument] in NetReceiveBlock shadows <range> definition in NMODL_GLOBAL
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [warning] :: SYMTAB :: u [Argument] in NetReceiveBlock shadows <range> definition in NMODL_GLOBAL
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [warning] :: SYMTAB :: u [Argument] in NetReceiveBlock shadows <range> definition in NMODL_GLOBAL
+[NMODL] [info] :: Parsing Units
+[NMODL] [warning] :: RenameVisitor :: Renaming variable erand at 200.17-21 to ret_erand
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv at 127.17-18 to (*Pv)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 128.17 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 129.17-20 to (*tsyn)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 153.39-44 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 154.39-44 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 155.25-30 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 156.39-44 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv at 143.30-31 to (*Pv)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv at 152.14-15 to (*Pv)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 143.13-18 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 145.23-28 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 146.13-18 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 146.23-28 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 146.36-41 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 152.19-24 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pr at 145.13-14 to (*Pr)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pr at 150.20-21 to (*Pr)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 134.17 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 134.21 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 136.19 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 139.19 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 139.23 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 139.34 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 145.19 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 146.32 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 134.33-36 to (*tsyn)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 143.44-47 to (*tsyn)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 151.7-10 to (*tsyn)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 120.14-19 to *weight
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv at 120.22-23 to *Pv
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 120.26-31 to *Pv_tmp
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pr at 120.34-35 to *Pr
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 120.38 to *u
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 120.41-44 to *tsyn
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [warning] :: Can not inline function call to erand
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [warning] :: RenameVisitor :: Renaming variable erand at 169.17-21 to ret_erand
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv at 99.17-18 to (*Pv)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 100.17 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 101.17-20 to (*tsyn)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 125.29-34 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 126.29-34 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv at 115.30-31 to (*Pv)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv at 124.14-15 to (*Pv)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 115.13-18 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 117.23-28 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 118.13-18 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 118.23-28 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 118.36-41 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 124.19-24 to (*Pv_tmp)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pr at 117.13-14 to (*Pr)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pr at 122.20-21 to (*Pr)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 106.17 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 106.21 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 108.19 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 111.19 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 111.23 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 111.34 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 117.19 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 118.32 to (*u)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 106.33-36 to (*tsyn)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 115.44-47 to (*tsyn)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 123.21-24 to (*tsyn)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 96.14-19 to *weight
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv at 96.22-23 to *Pv
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pv_tmp at 96.26-31 to *Pv_tmp
+[NMODL] [warning] :: RenameVisitor :: Renaming variable Pr at 96.34-35 to *Pr
+[NMODL] [warning] :: RenameVisitor :: Renaming variable u at 96.38 to *u
+[NMODL] [warning] :: RenameVisitor :: Renaming variable tsyn at 96.41-44 to *tsyn
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/epsp.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 52.2-6 to myexp_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 54.2-6 to myexp_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 51.6 to x_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 54.14 to x_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 52.2-6 to myexp_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 54.2-6 to myexp_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 51.6 to x_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 54.14 to x_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 52.2-6 to myexp_in_2
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 54.2-6 to myexp_in_2
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 51.6 to x_in_2
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 54.14 to x_in_2
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 52.2-6 to myexp_in_3
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 54.2-6 to myexp_in_3
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 51.6 to x_in_3
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 54.14 to x_in_3
+[NMODL] [warning] :: RenameVisitor :: Renaming variable curr at 63.3-6 to curr_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable curr at 67.3-6 to curr_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 62.6 to x_in_4
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 65.18 to x_in_4
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 66.18 to x_in_4
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 52.2-6 to ret_myexp
+[NMODL] [warning] :: RenameVisitor :: Renaming variable myexp at 54.2-6 to ret_myexp
+[NMODL] [warning] :: RenameVisitor :: Renaming variable curr at 63.3-6 to ret_curr
+[NMODL] [warning] :: RenameVisitor :: Renaming variable curr at 67.3-6 to ret_curr
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/exp2syn.mod
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/hh.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [warning] :: RenameVisitor :: Renaming variable vtrap at 119.17-21 to vtrap_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable vtrap at 121.17-21 to vtrap_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 118.18 to x_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 119.32 to x_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 121.25 to x_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 121.32 to x_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable y at 118.20 to y_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable y at 119.25 to y_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable y at 119.34 to y_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable y at 121.34 to y_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable vtrap at 119.17-21 to vtrap_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable vtrap at 121.17-21 to vtrap_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 118.18 to x_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 119.32 to x_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 121.25 to x_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable x at 121.32 to x_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable y at 118.20 to y_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable y at 119.25 to y_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable y at 119.34 to y_in_1
+[NMODL] [warning] :: RenameVisitor :: Renaming variable y at 121.34 to y_in_1
+[NMODL] [warning] :: Can not inline function call to rates
+[NMODL] [warning] :: Can not inline function call to rates
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/netstim.mod
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/expsyn.mod
+terminate called after throwing an instance of 'std::runtime_error'
+  what():  NMODL Parser Error : syntax error, unexpected NAME [Location : 9.5-10]
+    RANDOM ranvar
+----^
+
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 83.13-18 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 84.13-18 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 82.13-18 to *weight
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [warning] :: RenameVisitor :: Renaming variable v at 90.17 to arg_v
+[NMODL] [warning] :: RenameVisitor :: Renaming variable v at 98.30 to arg_v
+[NMODL] [warning] :: RenameVisitor :: Renaming variable v at 99.27 to arg_v
+[NMODL] [warning] :: RenameVisitor :: Renaming variable v at 104.29 to arg_v
+[NMODL] [warning] :: RenameVisitor :: Renaming variable v at 105.27 to arg_v
+[NMODL] [warning] :: RenameVisitor :: Renaming variable v at 110.29 to arg_v
+[NMODL] [warning] :: RenameVisitor :: Renaming variable v at 111.27 to arg_v
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [warning] :: RenameVisitor :: Renaming variable vtrap at 119.17-21 to ret_vtrap
+[NMODL] [warning] :: RenameVisitor :: Renaming variable vtrap at 121.17-21 to ret_vtrap
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 41.10-15 to (*weight)
+[NMODL] [warning] :: RenameVisitor :: Renaming variable weight at 40.13-18 to *weight
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+/home/diogo/miniforge3/envs/core_neuron/bin/nmodl:10: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import working_set
+Aborted (core dumped)
+make: *** [/home/diogo/miniforge3/envs/core_neuron/share/coreneuron/nrnivmodl_core_makefile:185: x86_64/corenrn/mod2c/netstim.cpp] Error 134
+make: ** Esperando que outros processos terminem.
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/passive.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/pattern.mod
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [warning] :: RenameVisitor :: Renaming variable initps in VERBATIM block to initps_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable initps in VERBATIM block to initps_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable sendgroup in VERBATIM block to sendgroup_in_0
+[NMODL] [warning] :: RenameVisitor :: Renaming variable sendgroup in VERBATIM block to sendgroup_in_0
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
+[NMODL] [warning] :: RenameVisitor :: Renaming variable initps in VERBATIM block to ret_initps
+[NMODL] [warning] :: RenameVisitor :: Renaming variable initps in VERBATIM block to ret_initps
+[NMODL] [warning] :: RenameVisitor :: Renaming variable sendgroup in VERBATIM block to ret_sendgroup
+[NMODL] [warning] :: RenameVisitor :: Renaming variable sendgroup in VERBATIM block to ret_sendgroup
+[NMODL] [info] :: Processing x86_64/corenrn/mod2c/stim.mod
+[NMODL] [info] :: Running symtab visitor
+[NMODL] [info] :: Running semantic analysis visitor
+[NMODL] [info] :: Running CVode to cnexp visitor
+[NMODL] [info] :: Running code compatibility checker
+[NMODL] [info] :: Running verbatim rename visitor
+[NMODL] [info] :: Running KINETIC block visitor
+[NMODL] [info] :: Running STEADYSTATE visitor
+[NMODL] [info] :: Parsing Units
+[NMODL] [info] :: Running nmodl inline visitor
+[NMODL] [info] :: Running local variable rename visitor
+[NMODL] [info] :: Running cnexp visitor
+[NMODL] [info] :: Running OpenACC backend code generator
