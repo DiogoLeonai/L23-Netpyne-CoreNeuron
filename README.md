@@ -4,6 +4,9 @@ This repository contains an implementation of a **human cortical layer 2/3 (L2/3
 
 The model is based on a detailed biophysical representation of human cortical L2/3 neurons, including morphologically detailed cells, synaptic mechanisms, and network connectivity. The implementation uses the NetPyNE framework for network construction and simulation setup, while CoreNEURON is used as the simulation engine to enable high-performance execution and GPU acceleration.
 
+To record LFP in NetPyNe it is necessary to follow the steps in the folder 'LFP_CoreNeuron_fix' and install Sonata 2.0.0 and allow **CoreNEURON** to take reports from Sonata when installing it.
+Unfortunately, GPU is not suportted for recording LFP.
+
 ## Features
 
 * Biophysically detailed model of the **human cerebral cortex, Layer 2/3**.
