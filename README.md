@@ -4,15 +4,14 @@ This repository contains an implementation of a **human cortical layer 2/3 (L2/3
 
 The model is based on a detailed biophysical representation of human cortical L2/3 neurons, including morphologically detailed cells, synaptic mechanisms, and network connectivity. The implementation uses the NetPyNE framework for network construction and simulation setup, while CoreNEURON is used as the simulation engine to enable high-performance execution and GPU acceleration.
 
-To record LFP with NetPyNE while using CoreNEURON, follow the instructions provided in the `LFP_CoreNEURON_Fix` folder.
+To record LFP with NetPyNE while using CoreNEURON, follow the installation
+and configuration tutorial provided in the `LFP_CoreNeuron_fix` folder.
 
-This workaround uses CoreNEURON's native SONATA reporting system and therefore requires SONATA/libsonatareport support to be enabled when compiling NEURON/CoreNEURON.
+The CoreNEURON LFP implementation uses CoreNEURON's native SONATA reporting system. MPI execution requires `libsonatareport` to be compiled with MPI support and linked against a parallel HDF5 installation. A serial HDF5 build is not sufficient for correct multi-rank LFP reporting.
 
-The workaround was validated with CoreNEURON CPU execution. In the current tested setup, enabling GPU execution produces an LFP report with the expected structure but zero-valued LFP data. Therefore, when LFP recording is required, the recommended configuration is:
+Detailed installation instructions and the required NetPyNE modifications are provided in `LFP_CoreNeuron_fix`.
 
-```python
-cfg.coreneuron = True
-cfg.gpu = False
+The workaround was validated with CoreNEURON CPU execution. In the current tested setup, enabling GPU execution produces an LFP report with the expected structure but zero-valued LFP data. 
 
 ## Features
 
@@ -142,3 +141,26 @@ Python script (.py): The main script-based version for running the model directl
 Jupyter Notebook (.ipynb): An interactive version of the model, useful for step-by-step execution, testing, debugging, and inspecting simulation results.
 
 Both versions implement the same human cortical Layer 2/3 model using NetPyNE and CoreNEURON, with support for GPU acceleration.
+
+## Running the Model
+
+The simulation is organized around four main files:
+
+- `cfg.py`: simulation configuration, execution backend, recording options, simulation duration, seeds, output options, and population sizes.
+- `netParams.py`: definition of the neuronal populations, cell models, synaptic mechanisms, network geometry, and connectivity rules.
+- `init.py`: construction of the network, insertion of additional mechanisms, simulation execution, data gathering, and post-processing.
+- `batch.py`: MPI launcher used to run the model with the desired number of processes.
+
+The recommended way to run the model is through `batch.py`.
+
+The basic workflow is:
+
+1. Configure the execution mode in `cfg.py`.
+2. Select whether LFP recording is enabled.
+3. Select the number of MPI processes in `batch.py`.
+4. If necessary, change the population sizes in `Circuit_param.xls`.
+5. Compile the NMODL mechanisms if they have not already been compiled.
+6. Run:
+
+```bash
+python3 batch.py
