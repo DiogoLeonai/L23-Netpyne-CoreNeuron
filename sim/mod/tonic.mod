@@ -1,99 +1,46 @@
 TITLE Tonic GABA current with rectification
 
-COMMENT
-    Tonic GABA current with voltage-dependent rectification.
-
-    Based on Pavlov et al. (J Neurosci. 2009).
-
-    Original kinetic scheme:
-
-        o <-> c
-
-    with:
-
-        b = forward rate constant
-        a = backward rate constant
-
-    Conservation:
-
-        o + c = 1
-
-    The system is represented using a single independent
-    state variable o. The closed-state probability is:
-
-        c = 1 - o
-ENDCOMMENT
-
-
 NEURON {
     SUFFIX tonic
-
     NONSPECIFIC_CURRENT i
-
-    RANGE g
-    RANGE e_gaba
-    RANGE i
-    RANGE o
-    RANGE c
-    RANGE a
-    RANGE b
-    THREADSAFE
+    RANGE i, a, b, g, e_gaba
 }
-
-
-UNITS {
-    (S) = (siemens)
-    (mV) = (millivolt)
-    (mA) = (milliamp)
-}
-
 
 PARAMETER {
     g = 0.001 (S/cm2)
     e_gaba = -80 (mV)
 }
 
-
 ASSIGNED {
-    v       (mV)
-    i       (mA/cm2)
-
-    a       (/ms)
-    b       (/ms)
-
-    c
+    v (mV)
+    i (mA/cm2)
+    a (/ms)
+    b (/ms)
 }
-
 
 STATE {
     o
+    c
 }
 
-
 BREAKPOINT {
-    SOLVE states METHOD cnexp
-
-    c = 1 - o
-
+    SOLVE kin METHOD sparse
     i = g * o * (v - e_gaba)
 }
 
-
-DERIVATIVE states {
-    rates()
-
-    o' = a * (1 - o) - b * o
-}
-
-
 INITIAL {
-    rates()
-    o = a/(a+b)
-    c = 1-o
+    SOLVE kin STEADYSTATE sparse
 }
 
+KINETIC kin {
+    rates(v)
 
-PROCEDURE rates() {
+    ~ o <-> c (b, a)
+
+    CONSERVE o + c = 1
+}
+
+PROCEDURE rates(v (mV)) {
     LOCAL x, y
 
     UNITSOFF

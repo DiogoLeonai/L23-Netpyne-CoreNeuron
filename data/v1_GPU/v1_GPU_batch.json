@@ -1,0 +1,32 @@
+{
+    "batch": {
+        "batchLabel": "v1_GPU",
+        "cfgFile": "cfg.py",
+        "evolCfg": {
+            "fitnessFunc": "removed"
+        },
+        "initCfg": {},
+        "method": "grid",
+        "netParamsFile": "netParams.py",
+        "optimCfg": {
+            "fitnessFunc": "removed"
+        },
+        "params": [
+            {
+                "label": "GLOBALSEED",
+                "values": [
+                    1234
+                ]
+            }
+        ],
+        "runCfg": {
+            "cores": 1,
+            "mpiCommand": "mpiexec",
+            "script": "init.py",
+            "skip": true,
+            "type": "mpi_direct"
+        },
+        "saveFolder": "../data/v1_GPU",
+        "seed": null
+    }
+}

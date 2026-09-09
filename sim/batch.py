@@ -1,9 +1,9 @@
 """
 batch.py 
 
-Batch simulation for S1 model using NetPyNE
+Batch simulation for L23 model using NetPyNE
 
-Contributors: salvadordura@gmail.com, fernandodasilvaborges@gmail.com
+Contributors: diogoleonaisouza@gmail.com, fernandodasilvaborges@gmail.com
 """
 from netpyne.batch import Batch
 from netpyne import specs
@@ -15,8 +15,7 @@ import numpy as np
 def custom():
     params = specs.ODict()
     
-    params[('seeds', 'stim')] =  [12346]    
-    # params[('gExc')] = [1.0]
+    params[('GLOBALSEED')] =  [1234]
 
     b = Batch(params=params, netParamsFile='netParams.py', cfgFile='cfg.py')
 
@@ -26,14 +25,9 @@ def custom():
 # Run configurations
 # ----------------------------------------------------------------------------------------------
 def setRunCfg(b, type='mpi_bulletin'):
-    if type=='mpi_bulletin' or type=='mpi':
-        b.runCfg = {'type': 'mpi_bulletin', 
-            'script': 'init.py', 
-            'skip': True}
-
-    elif type=='mpi_direct':
+    if type=='mpi_direct':
         b.runCfg = {'type': 'mpi_direct',
-            'cores': 20,
+            'cores': 1,
             'script': 'init.py',
             'mpiCommand': 'mpiexec', # --use-hwthread-cpus
             'skip': True}
@@ -46,7 +40,7 @@ def setRunCfg(b, type='mpi_bulletin'):
 if __name__ == '__main__': 
     b = custom() #
 
-    b.batchLabel = 'v2_1s_1000Neurons'  
+    b.batchLabel = 'v1_GPU'  
     b.saveFolder = '../data/'+b.batchLabel
     b.method = 'grid'
     setRunCfg(b, 'mpi_direct')  #  setRunCfg(b, 'hpc_slurm_Expanse')

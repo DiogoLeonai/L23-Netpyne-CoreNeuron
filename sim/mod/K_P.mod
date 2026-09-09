@@ -83,9 +83,9 @@ PROCEDURE rates() {
         mInf = 1 / (1 + exp(-(v + 1) / 12))
 
         if (v < -50) {
-            mTau = (1.25 + 175.03 * exp(0.026 * v)) / qt
+            mTau = (1.25 + 175.03 * exp(-0.026 * -v)) / qt
         } else {
-            mTau = (1.25 + 13 * exp(-0.026 * v)) / qt
+            mTau = (1.25 + 13 * exp(-v*0.026)) / qt
         }
 
         hInf = 1 / (1 + exp(-(v + 54) / (-11)))

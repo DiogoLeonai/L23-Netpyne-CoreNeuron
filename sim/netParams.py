@@ -1,6 +1,5 @@
 # =============================================================================
-# netParams.py  —  Network Parameters for L23Net NetPyNE Replica
-# Yao et al. 2022 human Layer 2/3 cortical microcircuit
+# netParams.py  —  Network Parameters for L23 NetPyNE 
 # =============================================================================
 import os
 import sys
@@ -9,7 +8,8 @@ from netpyne import specs
 import pandas as pd
 from scipy import stats as st
 import h5py
-
+import pickle
+from collections import defaultdict
 
 from cfg import cfg
 
@@ -300,9 +300,7 @@ if cfg.Change_axon_names:
                 
             for secname2 in netParams.cellParams[cellName]['secLists'].keys():
                 if 'myelin_0' in netParams.cellParams[cellName]['secLists'][secname2]:
-                    # print('old ->',cellName,secname2,netParams.cellParams[cellName]['secLists'][secname2][-1])
                     netParams.cellParams[cellName]['secLists'][secname2][-1] = 'axon_2'    
-                    # print('new ->',cellName,secname2,netParams.cellParams[cellName]['secLists'][secname2][-1])
 
 
 # =============================================================================
@@ -312,48 +310,24 @@ if cfg.Change_axon_names:
 #   cylinder radius = 250 µm in x-y
 # =============================================================================
 
-if cfg.LOAD_MATRIX_LFPy:   
-    
-    OUTPUTPATH = "../data/L23Net_LFPy/Circuit_output/"
-    filename = os.path.join(OUTPUTPATH,'cell_positions_and_rotations.h5')
+L23_UPPER  = -250   # µm
+L23_LOWER  = -1200  # µm
+L23_RADIUS =  250   # µm
+L23_UPPER_soma  = -550   # µm
+L23_LOWER_soma = -1500  # µm
 
-    popDataArray = {}
-    popDataArray[cfg.allpops[0]] = pd.read_hdf(filename,cfg.allpops[0])
-    popDataArray[cfg.allpops[0]] = popDataArray[cfg.allpops[0]].sort_values('gid')
-    popDataArray[cfg.allpops[1]] = pd.read_hdf(filename,cfg.allpops[1])
-    popDataArray[cfg.allpops[1]] = popDataArray[cfg.allpops[1]].sort_values('gid')
-    popDataArray[cfg.allpops[2]] = pd.read_hdf(filename,cfg.allpops[2])
-    popDataArray[cfg.allpops[2]] = popDataArray[cfg.allpops[2]].sort_values('gid')
-    popDataArray[cfg.allpops[3]] = pd.read_hdf(filename,cfg.allpops[3])
-    popDataArray[cfg.allpops[3]] = popDataArray[cfg.allpops[3]].sort_values('gid')
+for cellName in cfg.allpops:
 
-    for cellName in cfg.allpops:
-        cellsList = []
-        for i in range(0,len(popDataArray[cellName]['gid'])):
-            # cellsList.append({'x': 10.0*i, 'y': popDataArray[cellName]['z'][i], 'z': 100.0})
-            cellsList.append({'x': popDataArray[cellName]['y'][i], 'y': popDataArray[cellName]['z'][i], 'z': popDataArray[cellName]['x'][i]})
-        netParams.popParams[cellName] = {'cellType': cellName, 'cellsList': cellsList, 'cellModel': 'HH_full'}
-    
+    num_cells = cfg.cellNumber[cellName]
 
-else:
-    L23_UPPER  = -250   # µm
-    L23_LOWER  = -1200  # µm
-    L23_RADIUS =  250   # µm
-    L23_UPPER_soma  = -550   # µm
-    L23_LOWER_soma = -1500  # µm
-
-    for cellName in cfg.allpops:
-
-        num_cells = cfg.cellNumber[cellName]
-
-        netParams.popParams[cellName] = {
-            'cellType':  cellName,
-            'cellModel': 'HH_full',
-            'numCells':  num_cells,
-            'xRange': [0, 2*L23_RADIUS],
-            'zRange': [0, 2*L23_RADIUS],
-            'yRange': layer['23soma'],
-        }
+    netParams.popParams[cellName] = {
+        'cellType':  cellName,
+        'cellModel': 'HH_full',
+        'numCells':  num_cells,
+        'xRange': [0, 2*L23_RADIUS],
+        'zRange': [0, 2*L23_RADIUS],
+        'yRange': layer['23soma'],
+    }
 
 # print(netParams.popParams)
 
@@ -375,72 +349,7 @@ circuit_params["syn_params"] = {'none':{'tau_r_AMPA': 0,'tau_d_AMPA': 0,'tau_r_N
                                 'tau_d_NMDA': 0, 'e': 0,'Dep': 0,'Fac': 0,'Use': 0,'u0':0,'gmax': 0}}
 circuit_params["multi_syns"] = {'none':{'loc':0,'scale':0}}
 
-# organizing dictionary for LFPY input
-for pre in cell_names:
-    for post in cell_names:
-        if "PYR" in pre:
-            circuit_params["syn_params"][pre+post] = {'tau_r_AMPA': 0.3, 'tau_d_AMPA': 3, 'tau_r_NMDA': 2,
-                                                      'tau_d_NMDA': 65, 'e': 0, 'u0':0,
-                                                      'Dep': circuit_params["Depression"].at[pre, post],
-                                                      'Fac': circuit_params["Facilitation"].at[pre, post],
-                                                      'Use': circuit_params["Use"].at[pre, post],
-                                                      'gmax': circuit_params["syn_cond"].at[pre, post]}
-        else:
-            circuit_params["syn_params"][pre+post] = {'tau_r': 1, 'tau_d': 10, 'e': -80, 'u0':0,
-                                                      'Dep': circuit_params["Depression"].at[pre, post],
-                                                      'Fac': circuit_params["Facilitation"].at[pre, post],
-                                                      'Use': circuit_params["Use"].at[pre, post],
-                                                      'gmax': circuit_params["syn_cond"].at[pre, post]}
-        circuit_params["multi_syns"][pre+post] = {'loc':int(circuit_params["n_cont"].at[pre, post]),'scale':0}
-
 #------------------------------------------------------------------------------
-
-halfnorm_rv = st.halfnorm
-uniform_rv = st.uniform
-
-#              L2/3   L4     L5
-PYRmaxApics = [550   ,1550   ,1900]
-uppers =      [-250  ,-1200 ,-1600]
-lowers =      [-1200 ,-1580 ,-2300]
-
-depths = []
-rangedepths = []
-minSynLocs = []
-syn_pos = []
-pop_args = {}
-
-for i in range (3):
-    depths.append((lowers[i]-uppers[i])/2-PYRmaxApics[i])
-    rangedepths.append(abs(lowers[i]-uppers[i])/2)
-    minSynLocs.append((lowers[i]-uppers[i])/2*3-PYRmaxApics[i])
-
-# Excitatory: ProbAMPANMDA (AMPA + NMDA dual-exponential with Fuhrmann STP)
-netParams.synMechParams['Exc'] = {
-    'mod':        'ProbAMPANMDA',
-    'tau_r_AMPA': 0.3,
-    'tau_d_AMPA': 3.0,
-    'tau_r_NMDA': 2.0,
-    'tau_d_NMDA': 65.0,
-    'e':          0.0,
-    'u0':         0.0,
-    'Dep':        670.0,   # overridden per connection in connParams
-    'Fac':        17.0,
-    'Use':        0.46,
-    'gmax':       0.000248,
-}
-
-# Inhibitory: ProbUDFsyn (GABA-A dual-exponential with Fuhrmann STP)
-netParams.synMechParams['Inh'] = {
-    'mod':   'ProbUDFsyn',
-    'tau_r': 1.0,
-    'tau_d': 10.0,
-    'e':     -80.0,
-    'u0':    0.0,
-    'Dep':   710.0,   # overridden per connection in connParams
-    'Fac':   23.0,
-    'Use':   0.08,
-    'gmax':  0.002910,
-}
 
 # Ornstein-Uhlenbeck background noise: Gfluct2
 # Inserted per-section via custom function in init.py; listed here for reference.
@@ -499,9 +408,9 @@ for pre in cfg.allpops:
                                                         'Use': circuit_params["Use"].at[pre, post],
                                                         'gmax': circuit_params["syn_cond"].at[pre, post],
                                                         }
-                if int(circuit_params['Syn_pos'].at[pre, post]) == 0 and cfg.LOAD_MATRIX_LFPy == False:
+                if int(circuit_params['Syn_pos'].at[pre, post]) == 0:
                     netParams.synMechParams[pre+post]['gmax'] = cfg.gExc*circuit_params["syn_cond"].at[pre, post]
-                    print("cfg.LOAD_MATRIX_LFPy == False, correction factor applied in Exc-Exc coonections gmax*= ", cfg.gExc)                                
+                    #print("correction factor applied in Exc-Exc coonections gmax*= ", cfg.gExc)                                
             else:
                 netParams.synMechParams[pre+post] = {'mod': 'ProbUDFsyn',
                                                         'tau_r': 1, 'tau_d': 10,
@@ -516,59 +425,12 @@ for pre in cfg.allpops:
 #------------------------------------------------------------------------------
 # ConnParams
 #------------------------------------------------------------------------------
-if cfg.LOAD_MATRIX_LFPy:   
-    OUTPUTPATH = "../data/L23Net_LFPy/Circuit_output/"
-    filename = os.path.join(OUTPUTPATH,'synapse_connections.h5')
-    f = h5py.File(filename, 'r')
 
-for pre in cfg.allpops:
-    for post in cfg.allpops:
-        
-        if circuit_params['conn_probs'].at[pre, post] > 0.0:        
-
-            if cfg.LOAD_MATRIX_LFPy:   
-
-                synloc2 = {}
-                synsec2 = {}
-                matrix = {}
-                for i in range(cfg.cellNumber[post]):
-                    matrix[i] = [] 
-                    synloc2[i] = [] 
-                    synsec2[i] = []  
-
-                for vec in list(f[pre+':'+post]):
-                    gid_pre,  gid , weight, delay, sec, secx, x, y, z = vec
-                    section = str(sec).split(".")[1].split("[")[0] + "_" + str(sec).split(".")[1].split("[")[1][:-2]
-                    # print(section+"_"+str(secx))
-                    synsec2[gid-cfg.cellNumber0[post]].append(section)
-                    synloc2[gid-cfg.cellNumber0[post]].append(secx)
-                    matrix[gid-cfg.cellNumber0[post]].append([gid_pre-cfg.cellNumber0[pre],gid-cfg.cellNumber0[post]])
-
-                pre2post = []
-                synloc = []
-                synsec = []
-                for i in range(cfg.cellNumber[post]):
-                    for j,conn in enumerate(matrix[i]):
-                        pre2post.append(conn)
-                        synsec.append(synsec2[i][j])
-                        synloc.append(synloc2[i][j])
-
-                # print(pre+':'+post, len(pre2post),len(synloc),len(synsec))
-
-
-                netParams.connParams[pre + '->' + post] = {'preConds': {'cellType': pre}, 
-                                                            'postConds': {'cellType': post},
-                                                            'synMech': pre+post,
-                                                            'connList': pre2post,
-                                                            'weight': 1.0,         # synaptic weight 
-                                                            'delay': 0.5,      # transmission delay (ms) 
-                                                            'synsPerConn': int(1.0),
-                                                            'sec': synsec,
-                                                            'loc': synloc,
-                                                            }     
-
-
-            else:             
+if cfg.loadValidationConns==False: 
+    for pre in cfg.allpops:
+        for post in cfg.allpops:
+            if circuit_params['conn_probs'].at[pre, post] > 0.0:        
+                                  
                 netParams.connParams[pre + '->' + post] = {'preConds': {'cellType': pre}, 
                                                             'postConds': {'cellType': post},  #  E -> all (100-1000 um) ,'y': [0,5000]
                                                             'probability': circuit_params['conn_probs'].at[pre, post],                  # probability of connection
@@ -583,3 +445,170 @@ for pre in cfg.allpops:
                     netParams.connParams[pre + '->' + post]['sec'] = 'apical'
                 elif int(circuit_params['Syn_pos'].at[pre, post]) > 1:
                     netParams.connParams[pre + '->' + post]['sec'] = 'basal'
+
+
+# =============================================================================
+# Validation current clamp
+# =============================================================================
+
+if cfg.IClamp_val_act:
+    for pop in cfg.allpops:
+
+        source = f'IClamp_{pop}'
+
+        netParams.stimSourceParams[source] = {
+            'type': 'IClamp',
+            'del': cfg.IClamp_delay,
+            'dur': cfg.IClamp_dur,
+            'amp': cfg.IClamp_amp[pop],
+        }
+
+        netParams.stimTargetParams[f'{source}->{pop}'] = {
+            'source': source,
+            'conds': {'pop': pop},
+            'sec': 'soma_0',
+            'loc': 0.5,
+        }
+
+#########################################
+
+if cfg.loadValidationConns:
+
+    import pickle
+    from collections import defaultdict
+
+    print(
+        '[validation] Loading fixed network:',
+        cfg.validationConnFile
+    )
+
+    with open(
+        cfg.validationConnFile,
+        'rb'
+    ) as f:
+
+        validation_connections = pickle.load(f)
+
+    conn_groups = defaultdict(list)
+
+    # ----------------------------------------------------------
+    # Group connections
+    # ----------------------------------------------------------
+
+    for conn in validation_connections:
+
+        key = (
+            conn['prePop'],
+            conn['postPop'],
+            conn['synMech']
+        )
+
+        conn_groups[key].append(conn)
+
+    # ----------------------------------------------------------
+    # Create NetPyNE connParams
+    # ----------------------------------------------------------
+
+    for (
+        pre_pop,
+        post_pop,
+        syn_mech
+    ), group in conn_groups.items():
+
+        conn_list = []
+        sec_list = []
+        loc_list = []
+
+        weights = []
+        delays = []
+
+        for conn in group:
+
+            pre_local = (
+                conn['preGid']
+                - cfg.cellNumber0[pre_pop]
+            )
+
+            post_local = (
+                conn['postGid']
+                - cfg.cellNumber0[post_pop]
+            )
+
+            conn_list.append([
+                pre_local,
+                post_local
+            ])
+
+            sec_list.append(
+                conn['sec']
+            )
+
+            loc_list.append(
+                float(conn['loc'])
+            )
+
+            weights.append(
+                float(conn['weight'])
+            )
+
+            delays.append(
+                float(conn['delay'])
+            )
+
+        # ------------------------------------------------------
+        # Current model expects constant weight/delay per pair
+        # ------------------------------------------------------
+
+        if not np.allclose(
+            weights,
+            weights[0]
+        ):
+            raise ValueError(
+                f'Nonuniform weights in '
+                f'{pre_pop}->{post_pop}'
+            )
+
+        if not np.allclose(
+            delays,
+            delays[0]
+        ):
+            raise ValueError(
+                f'Nonuniform delays in '
+                f'{pre_pop}->{post_pop}'
+            )
+
+        label = (
+            f'validation_'
+            f'{pre_pop}->{post_pop}'
+        )
+
+        netParams.connParams[label] = {
+
+            'preConds': {
+                'cellType': pre_pop
+            },
+
+            'postConds': {
+                'cellType': post_pop
+            },
+
+            'connList': conn_list,
+
+            'synMech': syn_mech,
+
+            'weight': weights[0],
+
+            'delay': delays[0],
+
+            'synsPerConn': 1,
+
+            'sec': sec_list,
+
+            'loc': loc_list,
+        }
+
+        print(
+            f'[validation] '
+            f'{pre_pop}->{post_pop}: '
+            f'{len(conn_list)} synapses'
+        )

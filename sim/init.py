@@ -21,22 +21,18 @@ from scipy import stats as st
 import h5py
 
 
-from params.circuit_params import CELL_NAMES, SING_CELL_PARAM
+from params.circuit_params import SING_CELL_PARAM
 
 
-# cfg, netParams = sim.readCmdLineArgs(simConfigDefault='cfg.py', netParamsDefault='netParams.py')
 cfg, netParams = sim.readCmdLineArgs()
-# sim.create(netParams, cfg)
-# sim.createSimulateAnalyze(netParams, cfg)
 
 #MPI variables:
 COMM = MPI.COMM_WORLD
-SIZE = COMM.Get_size()
 RANK = COMM.Get_rank()
 GLOBALSEED = int(cfg.GLOBALSEED)
 
 # Create new RandomState for each RANK
-SEED = GLOBALSEED*10000
+SEED = GLOBALSEED*100
 np.random.seed(SEED + RANK)
 local_state = np.random.RandomState(SEED + RANK)
 halfnorm_rv = st.halfnorm
@@ -44,9 +40,7 @@ halfnorm_rv.random_state = local_state
 uniform_rv = st.uniform
 uniform_rv.random_state = local_state
 
-sim.initialize(
-    simConfig = cfg, 	
-    netParams = netParams)  				# create network object and set cfg and net params
+sim.initialize(simConfig = cfg, netParams = netParams)  				# create network object and set cfg and net params
 sim.net.createPops()               			# instantiate network populations
 sim.net.createCells()              			# instantiate network cells based on defined populations
 
@@ -323,31 +317,146 @@ def load_coreneuron_lfp(filename):
 
     return network_lfp, time_info
 
+import pickle
+
+
+def save_realized_connections(sim_obj, cfg_obj, COMM, RANK):
+
+    # ----------------------------------------------------------
+    # Build a normal Python gid -> population lookup
+    # ----------------------------------------------------------
+
+    local_gid_to_pop = {
+        int(cell.gid): cell.tags['pop']
+        for cell in sim_obj.net.cells
+    }
+
+    # Need all GIDs because presynaptic cell may live on another MPI rank
+    all_gid_to_pop_parts = COMM.allgather(
+        local_gid_to_pop
+    )
+
+    gid_to_pop = {}
+
+    for part in all_gid_to_pop_parts:
+        gid_to_pop.update(part)
+
+    # ----------------------------------------------------------
+    # Extract realized connections
+    # ----------------------------------------------------------
+
+    local_connections = []
+
+    for cell in sim_obj.net.cells:
+
+        post_gid = int(cell.gid)
+        post_pop = cell.tags['pop']
+
+        for conn in cell.conns:
+
+            pre_gid = conn.get('preGid', None)
+
+            if pre_gid is None:
+                continue
+
+            # Ignore non-cell sources
+            if not isinstance(
+                pre_gid,
+                (int, np.integer)
+            ):
+                continue
+
+            pre_gid = int(pre_gid)
+
+            if pre_gid < 0:
+                continue
+
+            # Population from actual instantiated network
+            pre_pop = gid_to_pop[pre_gid]
+
+            local_connections.append({
+                'preGid': pre_gid,
+                'postGid': post_gid,
+
+                'prePop': pre_pop,
+                'postPop': post_pop,
+
+                'synMech': conn.get('synMech', None),
+
+                'sec': conn.get('sec', None),
+                'loc': float(conn.get('loc', 0.5)),
+
+                'weight': float(conn.get('weight', 1.0)),
+                'delay': float(conn.get('delay', 0.0)),
+            })
+
+    # ----------------------------------------------------------
+    # Gather all MPI ranks
+    # ----------------------------------------------------------
+
+    gathered = COMM.gather(
+        local_connections,
+        root=0
+    )
+
+    if RANK == 0:
+
+        all_connections = []
+
+        for rank_connections in gathered:
+            all_connections.extend(
+                rank_connections
+            )
+
+        all_connections = sorted(
+            all_connections,
+            key=lambda x: (
+                x['postGid'],
+                x['preGid'],
+                str(x['sec']),
+                x['loc']
+            )
+        )
+
+        with open(
+            cfg_obj.validationConnFile,
+            'wb'
+        ) as f:
+
+            pickle.dump(
+                all_connections,
+                f
+            )
+
+        print(
+            f'[validation] Saved '
+            f'{len(all_connections)} realized connections to '
+            f'{cfg_obj.validationConnFile}'
+        )
+
+    COMM.Barrier()
+
 # ---------------------------------------------------------------------------
 # 5.  Build and run simulation
 # ---------------------------------------------------------------------------
 
-#print('[init] Inserting background noise (Gfluct2) ...')
+
 insert_ou_noise(sim, cfg, SING_CELL_PARAM)
-
-# print('[init] Inserting tonic GABA inhibition ...')
 insert_tonic_gaba(sim, cfg, SING_CELL_PARAM)
-
-sim.cfg.distributeSynsUniformly = False
-
-# print('[init] Creating connections ...')
 sim.net.connectCells()
 
-# print('[init] Adding external stimuli ...')
+if cfg.saveValidationConns:
+
+    save_realized_connections(
+        sim,
+        cfg,
+        COMM,
+        RANK
+    )
+
 sim.net.addStims()
-
-# print('[init] Setting up recording ...')
 sim.setupRecording()
-
-# print('[init] Running simulation ...')
 sim.runSim()
-
-# print('[init] Gathering data ...')
 sim.gatherData()
 
 
@@ -361,11 +470,8 @@ if (cfg.coreneuron and cfg.recordLFP):
     sim.simData['LFP'] = lfp
 
 
-# print('[init] Saving data ...')
 sim.saveData()
 
-
-# Delete temporary CoreNEURON LFP folder only AFTER saveData()
 if (cfg.coreneuron and cfg.recordLFP and hasattr(sim, '_coreLFP_output_dir')):
 
     import shutil
@@ -382,6 +488,4 @@ if (cfg.coreneuron and cfg.recordLFP and hasattr(sim, '_coreLFP_output_dir')):
             sim._coreLFP_output_dir
         )
 
-
-# print('[init] Plotting data ...')
 sim.analysis.plotData()           		# plot spikes, V traces, rasters, etc.
